@@ -63,12 +63,20 @@ A Chrome window will open.
 **First time:**
 - The terminal prints `Not logged in. Complete Google login...`
 - Sign in with Google in the Chrome window.
-- The script auto-detects when you're logged in and starts sending prompts.
+- **Open the chatbot panel manually** — click into the chat UI so the
+  message input is visible on screen. The script waits for this and won't
+  start sending prompts until the chat is open.
+- The script auto-detects when the chat input appears and starts sending
+  prompts.
 - Your login is saved in `browser_session/` so you won't have to log in again.
 
 **Every other time:**
-- The terminal prints `Already logged in — starting.`
-- The script begins immediately.
+- The terminal prints `Already logged in — starting.` (only after you open
+  the chatbot panel — same as above, you still need to click into the chat).
+- The script begins as soon as the chat input is visible.
+
+> **Important:** the script does not auto-open the chatbot. You always need
+> to click into the chat UI yourself before the prompt loop will start.
 
 While it runs you'll see lines like:
 ```
