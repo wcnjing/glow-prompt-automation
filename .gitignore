@@ -1,0 +1,4 @@
+venv/
+browser_session/
+results.csv
+__pycache__/
