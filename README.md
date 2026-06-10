@@ -11,11 +11,11 @@ You only need to do this once on your machine.
 
 ### Requirements
 
-- Mac or Linux with Python 3.10 or newer
+- Mac, Linux, or Windows with Python 3.10 or newer
 - Google Chrome installed (the real one, not Chromium)
 - A Glow account you can log into with Google
 
-### Install
+### Install (Mac / Linux)
 
 Open a terminal in this project folder and run:
 
@@ -26,7 +26,18 @@ pip install -r requirements.txt
 playwright install chromium
 ```
 
-That's it. The `venv/` folder is your isolated Python environment — you
+### Install (Windows)
+
+Open PowerShell or Command Prompt in this project folder and run:
+
+```powershell
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+playwright install chromium
+```
+
+That's it. The `venv/` folder is your isolated Python environment. You
 never touch it directly.
 
 ---
@@ -53,8 +64,15 @@ Save the file. You can edit it anytime between runs.
 
 In the same terminal:
 
+**Mac / Linux:**
 ```bash
 source venv/bin/activate    # only needed once per terminal session
+python run_eval.py
+```
+
+**Windows:**
+```powershell
+venv\Scripts\activate
 python run_eval.py
 ```
 
@@ -112,18 +130,32 @@ Open `results.csv` in Excel, Google Sheets, or Numbers. Columns:
 
 To re-run the same prompts from scratch:
 
+**Mac / Linux:**
 ```bash
 rm results.csv
 python run_eval.py
 ```
 
-If you don't delete `results.csv`, the script **resumes** — it skips any
+**Windows:**
+```powershell
+del results.csv
+python run_eval.py
+```
+
+If you don't delete `results.csv`, the script **resumes**. It skips any
 prompt IDs already in the file. Useful if a long run crashed halfway.
 
 To **swap accounts** (use a different Google login):
 
+**Mac / Linux:**
 ```bash
 rm -rf browser_session/
+python run_eval.py
+```
+
+**Windows:**
+```powershell
+rmdir /s /q browser_session
 python run_eval.py
 ```
 
