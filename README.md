@@ -1,7 +1,19 @@
 # Glow Prompt Evaluation Tool
 
-A simple Playwright-based tool that automates sending a list of prompts to
-Glow's AI tutor and saves the responses to a CSV file.
+A Playwright-based tool that automates sending a list of prompts to a chatbot
+and saves the responses to a CSV file.
+
+This repo has **two scripts** that do roughly the same job:
+
+- **`run_eval.py`** — the original. Hand-coded CSS selectors for Glow.
+  Reliable and fast for Glow specifically.
+- **`run_eval_llm_v2.py`** — product-agnostic. Uses an LLM (Groq's Llama 3.3)
+  to identify the chat input on whatever chatbot is loaded, then drives it
+  with Playwright. Slower to set up, works on chatbots the original script
+  doesn't know about. Use this if you want to evaluate other MOE chatbot
+  products beyond Glow.
+
+Both write to CSV with the same columns.
 
 ---
 
@@ -163,6 +175,73 @@ The next run will prompt you to log in again.
 
 ---
 
+## Alternative: the LLM-driven script (`run_eval_llm_v2.py`)
+
+Use this when you want to test a chatbot that **isn't Glow** — the LLM reads
+the page and figures out which element is the chat input, so no per-product
+selector tweaking.
+
+### One-time setup (in addition to Step 1 above)
+
+1. Get a free Groq API key at <https://console.groq.com/keys>.
+2. In your terminal, export it (keys are sensitive — never paste into chat or
+   commit to git):
+
+   **Mac / Linux:**
+   ```bash
+   export GROQ_API_KEY="gsk_your-key-here"
+   ```
+
+   To make it permanent, add the same line to `~/.zshrc` and run `source ~/.zshrc`.
+
+   **Windows (PowerShell):**
+   ```powershell
+   $env:GROQ_API_KEY = "gsk_your-key-here"
+   ```
+
+3. Open `run_eval_llm_v2.py` and change `BASE_URL` to the chatbot you want to
+   test. Defaults to Glow staging.
+
+### Run
+
+```bash
+source venv/bin/activate
+python run_eval_llm_v2.py
+```
+
+What you'll see:
+
+1. A Chrome window opens.
+2. Log in if needed, then open the chatbot panel so the chat input is visible.
+3. Press Enter in the terminal.
+4. The script asks Groq once: "which element here is the chat input?" and
+   prints the selector it picked.
+5. It then loops through `prompts.txt`, typing each prompt and pressing Enter
+   to send. Responses go to `results_llm.csv`.
+
+### How it's different
+
+| | `run_eval.py` | `run_eval_llm_v2.py` |
+|---|---|---|
+| Works on | Glow only | Any chatbot |
+| Setup per product | Update CSS selectors | None |
+| Sends via | Click submit button | Press Enter |
+| Response capture | Glow's response spans | Text-diff before vs after send |
+| External services | None | Groq API (free tier) |
+| Output file | `results.csv` | `results_llm.csv` |
+
+### Troubleshooting (LLM script)
+
+| Problem | Try this |
+|---|---|
+| `CERTIFICATE_VERIFY_FAILED` on a corporate network | `pip install truststore` (already in `requirements.txt`). The script auto-detects it and uses your system trust store. |
+| `HTTP 403` from Groq | Cloudflare blocked the request. The script sends a normal User-Agent header to avoid this — if you still see it, your `GROQ_API_KEY` is wrong or revoked. |
+| `HTTP 413 Payload Too Large` | The trimmed HTML is too big. Open the script and lower `max_chars` in `trim_html` (currently 8000). |
+| The script types but never sends | The chatbot may not accept Enter to send. For Glow specifically, use `run_eval.py` instead — it clicks the send button. |
+| Responses come out empty | The text-diff isn't finding new content. Usually because the chatbot's UI doesn't update its DOM in a way the diff catches. Try `run_eval.py` if you're on Glow. |
+
+---
+
 ## Configuration (advanced)
 
 Open `run_eval.py`. The top of the file has all the knobs you might want
@@ -195,9 +274,11 @@ to tweak:
 
 | File | What it is |
 |---|---|
-| `run_eval.py` | The script. |
-| `prompts.txt` | Your prompts (edit this). |
-| `results.csv` | Output (created by the script, not in git). |
+| `run_eval.py` | Glow-specific Playwright script. The reliable default. |
+| `run_eval_llm_v2.py` | Product-agnostic Playwright + LLM script. Needs `GROQ_API_KEY`. |
+| `prompts.txt` | Your prompts (edit this). Used by both scripts. |
+| `results.csv` | Output from `run_eval.py` (not in git). |
+| `results_llm.csv` | Output from `run_eval_llm_v2.py` (not in git). |
 | `requirements.txt` | Python packages to install. |
 | `README.md` | This file. |
 | `.gitignore` | Tells git what to ignore. |
