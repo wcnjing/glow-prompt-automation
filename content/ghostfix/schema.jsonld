@@ -1,0 +1,46 @@
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "best linear alternative?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Concise answer about linear.app addressing: best linear alternative"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "linear vs competitors?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Concise answer about linear.app addressing: linear vs competitors"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "is linear worth it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Concise answer about linear.app addressing: is linear worth it"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "pricing comparison for linear category?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Concise answer about linear.app addressing: pricing comparison for linear category"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "top tools like linear?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Concise answer about linear.app addressing: top tools like linear"
+      }
+    }
+  ]
+}
